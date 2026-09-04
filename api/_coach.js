@@ -65,4 +65,21 @@ The learner speaks or types a sentence, possibly in English, Hindi, or a mix (Hi
 6. End with one short, specific, encouraging remark.
 Be concise, kind, and practical. Never be condescending. Always call the give_speaking_feedback tool with your response as structured data - do not respond in plain text.`;
 
-module.exports = { anthropic, MODEL, FEEDBACK_TOOL, SYSTEM_PROMPT };
+// USD per 1M tokens. Update if pricing changes or CLAUDE_MODEL is switched
+// to a model not listed here.
+const PRICING = {
+  'claude-sonnet-5': { input: 2.0, output: 10.0 },
+  'claude-opus-5': { input: 5.0, output: 25.0 },
+  'claude-haiku-4-5': { input: 1.0, output: 5.0 }
+};
+
+function estimateCostUsd(usage, model) {
+  const rates = PRICING[model] || PRICING['claude-sonnet-5'];
+  const inputTokens = (usage.input_tokens || 0)
+    + (usage.cache_creation_input_tokens || 0)
+    + (usage.cache_read_input_tokens || 0);
+  const outputTokens = usage.output_tokens || 0;
+  return (inputTokens / 1e6) * rates.input + (outputTokens / 1e6) * rates.output;
+}
+
+module.exports = { anthropic, MODEL, FEEDBACK_TOOL, SYSTEM_PROMPT, estimateCostUsd };

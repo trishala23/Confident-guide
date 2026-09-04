@@ -1,4 +1,4 @@
-const { anthropic, MODEL, FEEDBACK_TOOL, SYSTEM_PROMPT } = require('./_coach');
+const { anthropic, MODEL, FEEDBACK_TOOL, SYSTEM_PROMPT, estimateCostUsd } = require('./_coach');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -39,7 +39,12 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: 'The model did not return structured feedback. Please try again.' });
     }
 
-    res.status(200).json(toolUse.input);
+    const usage = message.usage || {};
+    res.status(200).json({
+      ...toolUse.input,
+      usage: { input_tokens: usage.input_tokens || 0, output_tokens: usage.output_tokens || 0 },
+      cost_usd: estimateCostUsd(usage, MODEL)
+    });
   } catch (err) {
     console.error('Analyze error:', err);
     res.status(502).json({ error: 'Something went wrong talking to the AI coach. Please try again in a moment.' });

@@ -22,8 +22,12 @@
   const historyList = document.getElementById('historyList');
   const clearHistoryBtn = document.getElementById('clearHistoryBtn');
   const browserSupportNote = document.getElementById('browserSupportNote');
+  const usageText = document.getElementById('usageText');
+  const resetUsageBtn = document.getElementById('resetUsageBtn');
 
   const HISTORY_KEY = 'confident-guide-history';
+  const USAGE_KEY = 'confident-guide-usage';
+  const USD_TO_INR = 88; // approximate, update if the exchange rate moves a lot
   let currentLang = 'en';
   let recognition = null;
   let isRecording = false;
@@ -168,6 +172,7 @@
 
       renderResults(text, data);
       saveToHistory(text, data);
+      addUsage(data.cost_usd);
     } catch (err) {
       loadingState.hidden = true;
       resultsContent.hidden = true;
@@ -281,7 +286,37 @@
     renderHistory();
   });
 
+  // ---------- Usage / cost tracking (localStorage) ----------
+  function loadUsage() {
+    try {
+      return JSON.parse(localStorage.getItem(USAGE_KEY)) || { checks: 0, costUsd: 0 };
+    } catch (e) {
+      return { checks: 0, costUsd: 0 };
+    }
+  }
+
+  function addUsage(costUsd) {
+    const usage = loadUsage();
+    usage.checks += 1;
+    usage.costUsd += typeof costUsd === 'number' ? costUsd : 0;
+    localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
+    renderUsage();
+  }
+
+  function renderUsage() {
+    const usage = loadUsage();
+    const inr = usage.costUsd * USD_TO_INR;
+    const checkLabel = usage.checks === 1 ? 'check' : 'checks';
+    usageText.textContent = `${usage.checks} ${checkLabel} · ~$${usage.costUsd.toFixed(4)} (₹${inr.toFixed(2)})`;
+  }
+
+  resetUsageBtn.addEventListener('click', () => {
+    localStorage.removeItem(USAGE_KEY);
+    renderUsage();
+  });
+
   renderHistory();
+  renderUsage();
 
   if (!('speechSynthesis' in window)) {
     browserSupportNote.textContent = (browserSupportNote.textContent ? browserSupportNote.textContent + ' ' : '') +
