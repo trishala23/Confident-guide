@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Confident Guide — English Speaking Practice</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>🗣️ Confident Guide</h1>
+      <p class="subtitle">Speak or type in English or Hindi — get instant grammar, tone &amp; phrasing feedback.</p>
+    </header>
+
+    <main>
+      <section class="panel input-panel">
+        <div class="lang-toggle" role="radiogroup" aria-label="Input language">
+          <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">English</button>
+          <button type="button" class="lang-btn" data-lang="hi" aria-pressed="false">हिंदी (Hindi)</button>
+        </div>
+
+        <div class="mic-row">
+          <button type="button" id="micBtn" class="mic-btn" aria-label="Start speaking">
+            <span class="mic-icon">🎤</span>
+          </button>
+          <div class="mic-status" id="micStatus">Tap the mic and speak, or type below</div>
+        </div>
+
+        <textarea
+          id="textInput"
+          placeholder="Your sentence will appear here — or just type it yourself…"
+          rows="3"
+        ></textarea>
+
+        <div class="actions-row">
+          <button type="button" id="analyzeBtn" class="primary-btn">Check my sentence</button>
+          <button type="button" id="clearBtn" class="ghost-btn">Clear</button>
+        </div>
+      </section>
+
+      <section class="panel results-panel" id="resultsPanel" hidden>
+        <div id="loadingState" class="loading" hidden>
+          <div class="spinner"></div>
+          <span>Your coach is thinking…</span>
+        </div>
+
+        <div id="resultsContent" hidden>
+          <div class="result-block" id="translationBlock" hidden>
+            <h3>Translation</h3>
+            <p id="translationText" class="pill-text"></p>
+          </div>
+
+          <div class="result-block">
+            <h3>Corrected sentence</h3>
+            <div class="corrected-row">
+              <p id="correctedText" class="corrected-text"></p>
+              <button type="button" id="speakCorrectedBtn" class="icon-btn" aria-label="Listen to corrected sentence">🔊</button>
+            </div>
+          </div>
+
+          <div class="result-block" id="errorsBlock" hidden>
+            <h3>What to fix</h3>
+            <ul id="errorsList" class="errors-list"></ul>
+          </div>
+
+          <div class="result-block">
+            <h3>Tone &amp; naturalness</h3>
+            <p id="toneText"></p>
+          </div>
+
+          <div class="result-block" id="alternativesBlock" hidden>
+            <h3>Other ways to say it</h3>
+            <div id="alternativesList" class="alternatives-list"></div>
+          </div>
+
+          <div class="result-block encouragement-block">
+            <p id="encouragementText"></p>
+          </div>
+        </div>
+
+        <div id="errorState" class="error-state" hidden></div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="history-header">
+          <h3>Practice history</h3>
+          <button type="button" id="clearHistoryBtn" class="ghost-btn small">Clear history</button>
+        </div>
+        <ul id="historyList" class="history-list"></ul>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p id="browserSupportNote"></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
