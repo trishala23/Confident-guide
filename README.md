@@ -75,3 +75,8 @@ it can't run the backend or keep your API key secret.
   supports the Web Speech API (Chrome/Edge recommended; Safari and Firefox support
   is limited or absent). Typing always works as a fallback.
 - Your `.env` file (with your API key) is git-ignored and never committed.
+
+## Contributing
+
+See [AGENTS.md](./AGENTS.md) for the branching and pull-request workflow this
+repo follows.
